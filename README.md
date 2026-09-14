@@ -7,13 +7,14 @@
 
 hearth is a Python script to help mass download an Anna's Archive List. 
 
-It has been made with the help of Gemini: I had never used Python before, and the AI handled the more complex parts of the code. The idea for the script and how it works is mine, all the main logic is written by me and I have revised and tested all AI generated code. All of `README.md` has been written manually by me (except for the terminal commands and error handling).
+It has been made with the help of Gemini: I had never used Python before, and the AI handled the more complex parts of the code. The idea for the script and how it works is mine, all the main logic is written by me and I have revised and tested all AI generated code. All of `README.md` has been written manually by me (except for the terminal commands and error handling) and 99% of the comments to the code are written by me.
 
 **Key features**:
 - This is a terminal tool that accepts command line parameters to function (more about usage below).
 - hearth supports Anna's Archive List links in the form of `https://annas-archive.XX/list/<list_id>` as well as importing a list of Anna's Archive links from a `.txt` file.
 - The tool will spin up a virtual browser that physically visits the link page, waits for the download cooldown and renames the downloaded file, before going ahead to the next List element, logging successes and failures in specific files.
 - These files allow you to not only stop the script mid-way, closing the terminal windows completely, and then resuming from the last link it successfully downloaded (by using the same exact command), but it also allows to retry for failed links once the tool has finished processing the whole queue.
+- You can set the amount of retries that the script does to a file that fails to download.
 - You can use the `completed.txt` file that the script will create in your download directory as an index of all the files you downloaded as well as their md5 code.
 - The download destination folder is chosen via command line parameters. Here will be stored said files.
 - You can set how to rename the downloaded files, based on how much information you want to be in the filename, via command line parameters.
@@ -48,7 +49,7 @@ Alternatively, open CMD, type `python`, and press Enter. This will automatically
 
 **Installation of necessary tools**:
 
-The script needs a tool called "Playwright" to control the web browser.
+The script needs a tool called "Playwright" (and a couple of other things) to control the web browser.
 
 We can install it, as well as any other dependency, via `requirements.txt`.
 
@@ -73,7 +74,7 @@ sudo apt update && sudo apt install python3 python3-pip
 
 **Installation of necessary tools**:
 
-The script needs a tool called "Playwright" to control the web browser, plus a few system dependencies to run it. We can install them using the `requirements.txt` file.  
+The script needs a tool called "Playwright" (and a couple of other things) to control the web browser, plus a few system dependencies to run it. We can install them using the `requirements.txt` file.  
 Open your terminal directly inside of the folder that contains `hearth.py` and `requirements.txt`, or `cd` into it (the command should be `cd <pathToHearthFolder>`) and run these commands one by one:
 ```
 pip3 install -r requirements.txt
@@ -104,11 +105,11 @@ python hearth.py
 
 ## Usage
 
-Simply launching the script with `python hearth.py` will do nothing, as the script has no parameters (such as your List or your `.txt` file, the operating mode, the chosen download directory and the file naming options)
+Simply launching the script with `python hearth.py` will do nothing, as the script has no parameters (such as your List or your `.txt` file, the operating mode, the chosen download directory, the file naming options and the amount of retries).
 
 To correctly use hearth, follow this scheme:
 ```
-python hearth.py <OPERATING_MODE/LIST_LINK> <DOWNLOAD_FOLDER_DIRECTORY> [FILENAME_FORMAT]
+python hearth.py <OPERATING_MODE/LIST_LINK> <DOWNLOAD_FOLDER_DIRECTORY> [FILENAME_FORMAT] [AMOUNT_OF_RETRIES]
 ```
 These are the options you have:
 
@@ -162,13 +163,22 @@ You can leave it blank (which is the default and corresponds to `full`) or put o
 - `author`. This tells the script to save only the Title and the Author, in which case a hyphen will be put between the two.
 - `title`. This tells the script to save only the Title of the media you're downloading.
 
+### [AMOUNT_OF_RETRIES]
+
+It sometimes happens (especially with Libgen mirrors) that a file will start to download but fail midway. This kind of failed downloads usually can't be resumed as Libegn gives out a single use download link which can't be reused to restart the download from a given point.
+
+If the script detects that the download failed, or that the page didn't load, or any other error (most possible errors are accounted for), it will revert to the book page and try the download through the selected mirror again. 
+
+You can leave this field blank, which will default to `5`, or input whatever integer greater than 0 (`n>0`) you want. This will be the amount of retries the script does before moving onto the next item in the List.
+
+
 ## IMPORTANT STEP: CAPTCHAS
 
-As the browser controlled by Playwright is automated, it cannot solve Captchas.
+As the browser controlled by Playwright is automated, it cannot solve Captchas. Playwright is using `stealth mode` and it's launched with the following arguments: `(headless=False, args=["--disable-blink-features=AutomationControlled"])` which make it simulate a human-operated browser and therefore make it less susceptible to targeted captchas and captchas in general.
 
-At the launch of the script, when the main List link is loaded or when a mirror "slow download" link is loaded for the first time, the browser might ask you to solve a Captcha. The script will wait for you to do so.
+At any time (usually at the launch of the script, when the main List link is loaded or when a mirror "slow download" link is loaded for the first time), the browser might ask you to solve a Captcha. If it can't automatically solve it, the script will wait for you to do so.
 
-Normally, solving the Captcha that appears at the load of the main List page as well as the one that appears at the first load of a mirror "slow download" link <ins>is enough for the rest of the session</ins>.
+Normally, all captchas are automatically solved, at least according to my testing. If that's not the case, **usually** solving the Captcha that appears at the load of the main List page as well as the one that appears at the first load of a mirror "slow download" link <ins>is enough for the rest of the session</ins>.
 
 ## What this script supports
 
