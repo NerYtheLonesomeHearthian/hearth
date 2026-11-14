@@ -7,7 +7,11 @@
 
 hearth is a Python script to help mass download an Anna's Archive List. 
 
-It has been made with the help of Gemini: I had never used Python before, and the AI handled the more complex parts of the code. The idea for the script and how it works is mine, all the main logic is written by me and I have revised and tested all AI generated code. All of `README.md` has been written manually by me (except for the terminal commands and error handling) and 99% of the comments to the code are written by me.
+
+**AI disclosure**:
+
+It has been made with the help of Gemini: I had never used Python before, and the AI handled the more complex parts of the code (mainly Playwright syntax). I used this opportunity to learn Python, you will see beginner-style comments in some parts of the code. The idea for the script and how it works is mine, all the main logic is written by me and I have revised and tested all AI generated code. I know what every line does. All of `README.md` has been written manually by me (except for the terminal commands and error handling) and 99% of the comments to the code are written by me. The logo is taken directly from an in-game screenshot of the videogame Outer Wilds, and i made the header image in Photoshop.
+
 
 **Key features**:
 - This is a terminal tool that accepts command line parameters to function (more about usage below).
@@ -19,12 +23,14 @@ It has been made with the help of Gemini: I had never used Python before, and th
 - The download destination folder is chosen via command line parameters. Here will be stored said files.
 - You can set how to rename the downloaded files, based on how much information you want to be in the filename, via command line parameters.
 
+Please check beforehand if this script [supports](#what-this-script-supports) the mirrors the files in your List are on!
+
 
 ## Downloading the script and folder set-up
 
 1. Create a new folder named `hearth` or `AAdownloaderScript` (or the name you prefer) on your computer.
 2. Download `hearth.py` and `requirements.txt` from this repository and put the files in the folder you just created (or download the whole repository as a `.zip` and extract it, before copying those two files from the extracted folder into your newly created folder).
-3. (Optional) inside of the `hearth` folder, make another folder in which your downloaded files will go. Name this second folder `AAdownloads` or anything you deem fit.
+3. (Optional) inside of the `hearth` folder, or in whatever directory you prefer, make another folder in which your downloaded files will go. Name this second folder `AAdownloads` or anything you deem fit.
 
 
 ## Component installation and script launch
@@ -41,9 +47,9 @@ Be sure to check the box that says "Add python.exe to PATH" before clicking on "
 Alternatively, you can install it via command prompt using Winget.  
 Open CMD and paste this command:
 ```
-winget install Python.Python.3.12 --source winget
+winget install Python.Python.3.15 --source winget
 ```
-substituting `3.12` with the latest version.
+substituting `3.15` with the latest version.
 
 Alternatively, open CMD, type `python`, and press Enter. This will automatically open the Microsoft Store to the most up-to-date version of Python available for your system.
 
@@ -176,9 +182,9 @@ You can leave this field blank, which will default to `5`, or input whatever int
 
 As the browser controlled by Playwright is automated, it cannot solve Captchas. Playwright is using `stealth mode` and it's launched with the following arguments: `(headless=False, args=["--disable-blink-features=AutomationControlled"])` which make it simulate a human-operated browser and therefore make it less susceptible to targeted captchas and captchas in general.
 
-At any time (usually at the launch of the script, when the main List link is loaded or when a mirror "slow download" link is loaded for the first time), the browser might ask you to solve a Captcha. If it can't automatically solve it, the script will wait for you to do so.
+At any time (it could be at the launch of the script, when the main List link is loaded or when a mirror "slow download" link is loaded for the first time), the browser might ask you to solve a Captcha. If it can't automatically solve it, the script will wait for you to do so.
 
-Normally, all captchas are automatically solved, at least according to my testing. If that's not the case, **usually** solving the Captcha that appears at the load of the main List page as well as the one that appears at the first load of a mirror "slow download" link <ins>is enough for the rest of the session</ins>.
+Normally, all captchas are automatically solved, at least according to my testing. Since the introduction of `playwright-stealth` i haven't had to manually complete a single Captcha. If that's not the case for you, **usually** solving the Captcha that appears at the load of the main List page as well as the one that appears at the first load of a mirror "slow download" link <ins>is enough for the rest of the session</ins>. Experiences may vary; in any case, the script will wait indefinitely for you to solve the Captcha if it encounters one it cannot solve by itself. 
 
 ## What this script supports
 
@@ -198,6 +204,6 @@ This project is under the MIT license. Check out `LICENSE` for more details.
 
 This project is still new, I know little about Python and I have a lot to learn.
 
-If you have any issues or bugs to report, please feel free to do so. Same thing goes for suggestions or improvements.
+If you have any issues or bugs to report, please feel free to do so by opening an issue. Same thing goes for suggestions or improvements.
 
 
